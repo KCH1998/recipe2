@@ -25,12 +25,14 @@ def extract_dishes_from_text(text):
 def get_recipe_from_openai(dish_name):
     prompt = f"{dish_name}의 레시피를 알려주세요."
     try:
-        response = openai.Completion.create(
-            engine="text-davinci-003",
-            prompt=prompt,
-            max_tokens=150
+        response = openai.ChatCompletion.create(
+            model="gpt-3.5-turbo",  # 최신 모델 사용
+            messages=[
+                {"role": "system", "content": "You are a helpful assistant."},
+                {"role": "user", "content": prompt}
+            ]
         )
-        return response.choices[0].text.strip()
+        return response.choices[0].message['content'].strip()
     except Exception as e:
         return str(e)
 
